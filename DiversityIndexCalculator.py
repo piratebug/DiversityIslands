@@ -17,28 +17,39 @@ and will function something like...
 --multiply percentage of population by natural log
 --calculate inverse sum for each category (race, age, gender)
 """
+
 # Imports
-import pandas as pd
 import arcpy
+import pandas as pd
+
 
 # Set workspace as a user specified parameter
-ws =  arcpy.GetParameterAsText(0) # or your filepath here, for testing
+ws = #arcpy.GetParameterAsText(0) # or your filepath here, for testing
 arcpy.env.workspace = ws
 
+
 # Inputs
-inputTable = 'sample.csv' #table user will be working with
-#totalPopulation = #user input field
-#totalPopDiversity = [] #multiple user input columns
+#inputTable = arcpy.GetParameterAsText(1) #table user will be working with
+#totalPopluation = arcpy.GetParameterAsText(2) #user input field
+#totalPopDivList = arcpy.GetParameterAsText(3) #user input multiple columns
+inputTable = 'sample.csv'
+totalPopulation = 'Total'
+totalPopDivList = ['White', 'Black', 'Native', 'Asian', 'Other']
+
 
 # Calculations
-def calculateDivIndex(inputTable):
-    with open(inputTable, 'r') as table:
-        data = table.readlines()
-    print(data)
-    table.close()
+def calculateDivIndex(inputTable, totalPopulation, totalPopDivList):
+    data = pd.read_csv(inputTable)
 
-## Refresh on how to use pandas to create a dataframe from a csv, select columns
-## Refresh howto create new column - create new column to store div population percentages
+    for div in totalPopDivList:
+        divPerc = div + " Perc"
+        data[divPerc] = data[div] / data[totalPopulation]
+    
+
+    print(data.head())
+
+
+    
 ## Figure out how to code natural logarithm
 ## Repeat column creation on natural log, multiplying percentges, and inverse sum
 ## Don't forget the try / excepts
@@ -47,7 +58,7 @@ def calculateDivIndex(inputTable):
 if __name__ == "__main__":
     inputTable = 'sample.csv'
 
-    calculateDivIndex(inputTable)
+    calculateDivIndex(inputTable, totalPopulation, totalPopDivList)
 
 
 
