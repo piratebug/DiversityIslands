@@ -5,35 +5,49 @@ This program will take a series of spreadsheets from the census and use the fiel
 to calculate a diversity index for the respective area.
 
 Final tool should look something like...
-GEOID: [field select]
-Race Table: [user input]
-Race Table Fields: [user input]
-Age & Gender Table: [user input]
-Age & Gender Table Fields: [user input]
+Table: [user input]
+Overall Population: [user input field]
+Diveristy Populations: [multiple user input fields]
+
 
 and will function something like...
--get FID from GEOID
--identify total pop for each race (consolidate if needed)
--calculate total men
--calculate total women
--calculate ages into 10 year groups
--calculate percentage of overall population for each
--calculate natural logarithm of each
--multiply percentage of population by natural log for each
--calculate inverse sum for each category (race, age, gender)
--weighted overlay to balance the final categories
+-for each Diversity Population input:
+--calculate percent of overall population
+--calculate natural logarithm 
+--multiply percentage of population by natural log
+--calculate inverse sum for each category (race, age, gender)
 """
 # Imports
 import pandas as pd
 import arcpy
 
 # Set workspace as a user specified parameter
-ws = arcpy.GetParameterAsText(0)
+ws =  arcpy.GetParameterAsText(0) # or your filepath here, for testing
 arcpy.env.workspace = ws
 
 # Inputs
-# set variables for the tables that will
-# be manipulated, have the user designate the files
+inputTable = 'sample.csv' #table user will be working with
+#totalPopulation = #user input field
+#totalPopDiversity = [] #multiple user input columns
+
+# Calculations
+def calculateDivIndex(inputTable):
+    with open(inputTable, 'r') as table:
+        data = table.readlines()
+    print(data)
+    table.close()
+
+## Refresh on how to use pandas to create a dataframe from a csv, select columns
+## Refresh howto create new column - create new column to store div population percentages
+## Figure out how to code natural logarithm
+## Repeat column creation on natural log, multiplying percentges, and inverse sum
+## Don't forget the try / excepts
+
+
+if __name__ == "__main__":
+    inputTable = 'sample.csv'
+
+    calculateDivIndex(inputTable)
 
 
 
