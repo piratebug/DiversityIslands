@@ -20,6 +20,7 @@ and will function something like...
 
 # Imports
 import arcpy
+import numpy as np
 import pandas as pd
 
 
@@ -43,14 +44,21 @@ def calculateDivIndex(inputTable, totalPopulation, totalPopDivList):
 
     for div in totalPopDivList:
         divPerc = div + " Perc"
+        divLog = div + " Log"
+        divDiv = div + " Div"
+        # Create columns for and calculate percentages for each diversity column
         data[divPerc] = data[div] / data[totalPopulation]
-    
+        # Create columns for and calculate natural log of each diversity percentage
+        data[divLog] = np.log(data[divPerc])
+        # Errors with inf/-inf when log encounters '0' in divPerc, replaces infs with 0
+        data[divLog].replace([np.inf, -np.inf], 0, inplace = True)
+        
 
     print(data.head())
+    data.to_csv('output.csv')
 
 
     
-## Figure out how to code natural logarithm
 ## Repeat column creation on natural log, multiplying percentges, and inverse sum
 ## Don't forget the try / excepts
 
