@@ -41,26 +41,40 @@ totalPopDivList = ['White', 'Black', 'Native', 'Asian', 'Other']
 # Calculations
 def calculateDivIndex(inputTable, totalPopulation, totalPopDivList):
     data = pd.read_csv(inputTable)
+    totalDivDivList = []
+    sumData = 0.0
 
-    for div in totalPopDivList:
-        divPerc = div + " Perc"
-        divLog = div + " Log"
-        divDiv = div + " Div"
-        # Create columns for and calculate percentages for each diversity column
-        data[divPerc] = data[div] / data[totalPopulation]
-        # Create columns for and calculate natural log of each diversity percentage
-        data[divLog] = np.log(data[divPerc])
-        # Errors with inf/-inf when log encounters '0' in divPerc, replaces infs with 0
-        data[divLog].replace([np.inf, -np.inf], 0, inplace = True)
+    try:
+        for div in totalPopDivList:
+            divPerc = div + " Perc" # population percentages
+            divLog = div + " Log"   # natural logs of percentages
+            divDiv = div + " Div"   # diversification (percentages * natural logs)
+            # Create columns for and calculate percentages for each diversity column
+            data[divPerc] = data[div] / data[totalPopulation]
+            # Create columns for and calculate natural log of each diversity percentage
+            data[divLog] = np.log(data[divPerc])
+            # Errors with inf/-inf when log encounters '0' in divPerc, replaces infs with 0
+            data[divLog].replace([np.inf, -np.inf], 0, inplace = True)
+            # Multiply each population percentage by its Natural Log
+            data[divDiv] = data[divPerc] * data[divLog]
+            # Create list of diversifictions to iterate through later
+            totalDivDivList.append(data[divDiv])
+
+        # Calculate the inverse sum of all the diversifications (divDiv)
+        for div in totalDivDivList:
+            sumData = sumData + div
+            # Inverse of the sum becomes the Diversity Index
+            data['Diversity Index'] = -sumData
+
+        print(data.head())
+        print(data['Diversity Index'])
+        data.to_csv('output.csv')
+
+    except Exception as issue:
+        print("Error occured: ", issue)
         
 
-    print(data.head())
-    data.to_csv('output.csv')
-
-
-    
-## Repeat column creation on natural log, multiplying percentges, and inverse sum
-## Don't forget the try / excepts
+## Add ArcPy messages
 
 
 if __name__ == "__main__":
