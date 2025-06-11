@@ -24,19 +24,26 @@ import numpy as np
 import pandas as pd
 
 
-# Test Inputs
+# Set workspace as a user specified parameter
+#ws = r"C:\Users\student\Documents\ArcGIS\Projects\DiversityCalc"  # Or your filepath here, for testing
+#arcpy.env.workspace = ws
+
+
+# Inputs
 ##inputTable = 'sample.csv'
 ##totalPopulation = 'Total'
 ##totalPopDivList = ['White', 'Black', 'Native', 'Asian', 'Other']
 
 
 # Calculations
-def calculateDivIndex(inputTable, totalPopulation, totalPopDivList):
+def calculateDivIndex(inputTable, totalPopulation, totalPopDivList, outputTable):
+##    ws = arcpy.GetParameterAsText(0)
+##    arcpy.env.workspace = ws
 
-    # Prep totalPopDivList because the multiple value Fields data arrives as "input;input"
-    # rather than a list of strings such as ["input","input"]
-    # Remove single quotes then split by semicolon
+    #Remove single quotes
     totalPopDivList = totalPopDivList.replace("'","")
+
+    #split input tables by semicolon ";"
     totalPopDivList = totalPopDivList.split(";")
     
     data = pd.read_csv(inputTable)
@@ -91,8 +98,12 @@ def calculateDivIndex(inputTable, totalPopulation, totalPopDivList):
             del data[divDiv]
         arcpy.AddMessage('Cleaning up data...')
 
+        # Output to a new file
+        data.to_csv(outputTable)
 
-        data.to_csv(inputTable)
+        ## NOTE: Output to a new file was the quickest work around to ArcGIS Pro not updating
+        ## .csv's in the catalogue. Consider looking into schema.ini file in the project to
+        ## find an automated solution to update original .csv
 
     except Exception as issue:
         print("Error occured: ", issue)
@@ -104,11 +115,12 @@ def calculateDivIndex(inputTable, totalPopulation, totalPopDivList):
 
 
 if __name__ == "__main__":
-    inputTable = arcpy.GetParameterAsText(0)         # table user will be working with
-    totalPopulation = arcpy.GetParameterAsText(1)    # user input field
-    totalPopDivList = arcpy.GetParameterAsText(2)  # user input multiple columns
+    inputTable = arcpy.GetParameterAsText(0)            # file user will be working with
+    totalPopulation = arcpy.GetParameterAsText(1)       # user input field
+    totalPopDivList = arcpy.GetParameterAsText(2)       # user input multiple columns
+    outputTable = arcpy.GetParameterAsText(3) + ".csv"  # file results will export to
     
-    calculateDivIndex(inputTable, totalPopulation, totalPopDivList)
+    calculateDivIndex(inputTable, totalPopulation, totalPopDivList, outputTable)
 
 
 
