@@ -1,0 +1,1 @@
+In order to run this project, download and install uv here: https://docs.astral.sh/uv/getting-started/installation/
