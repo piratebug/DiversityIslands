@@ -26,15 +26,20 @@ def cleanData(censusData):
     try:
         print(censusData) # for testing
 
-        # delete first row
+        # set headers to the the contents of the first row, then delete first row
+        censusData.columns = censusData.iloc[0]
         censusData.drop(0, inplace = True)
+
 
         # delete last row
         censusData = censusData.iloc[:-1]
         
-        # THERE MUST BE A BETTER WAY
+        # remove second column
+        censusData.drop(['Geographic Area Name'], axis=1, inplace = True)
 
-        print(censusData)
+        # delete all columns containing 'margin of error'
+
+        print(censusData.columns)
 
         # censusData.to_csv("cleanData.csv") # create new file for data output
 
