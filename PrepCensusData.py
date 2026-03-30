@@ -20,11 +20,23 @@ import pandas as pd
 # Inputs
 censusData = pd.read_csv("complexSample.csv") #arcpy.GetParameterAsText(0)  #OR your file path here
 
+
 # Calculations
 def cleanData(censusData):
     try:
-        censusData
-            
+        print(censusData) # for testing
+
+        # delete first row
+        censusData.drop(0, inplace = True)
+
+        # delete last row
+        censusData = censusData.iloc[:-1]
+        
+        # THERE MUST BE A BETTER WAY
+
+        print(censusData)
+
+        # censusData.to_csv("cleanData.csv") # create new file for data output
 
     except Exception as issue:
         print("Error occured: ", issue)
