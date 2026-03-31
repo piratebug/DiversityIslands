@@ -7,7 +7,7 @@ functionality includes...
 X remove first row & last row
 X remove second column (geographic area name)
 X remove all columns that contain "margin of error"
-- rename first column header TOTAL_POP
+X rename first column header TotalPop
 - remove "Estimate!!Total:!!" from all other column headers
 - calculate FIPS from GeoID (right 11 digits)
 """
@@ -44,7 +44,10 @@ def cleanData(censusData):
         marginsOfError = [col for col in censusData.columns if "Margin of Error" in col]
         censusData.drop(censusData[marginsOfError], axis=1, inplace = True)
 
-        #print(censusData[marginsOfError])
+        # rename first column header TotalPop
+        censusData = censusData.rename(columns={"Estimate!!Total:": "TotalPop"})
+
+
         
         print(list(censusData.columns))
 
