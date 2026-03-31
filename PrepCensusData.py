@@ -35,7 +35,7 @@ def cleanData(censusData):
         censusData = censusData.iloc[:-1]
         
         # remove second column
-        censusData.drop(['Geographic Area Name'], axis=1, inplace = True)
+        censusData = censusData.drop(['Geographic Area Name'], axis=1)
 
         # remove last column (a rogue NaN)  ***NEED TO WRITE A TEST FOR THIS, NOT SURE WHY IT SHOWS UP***
         censusData = censusData.iloc[:,:-1]
@@ -47,9 +47,11 @@ def cleanData(censusData):
         # rename first column header TotalPop
         censusData = censusData.rename(columns={"Estimate!!Total:": "TotalPop"})
 
+        # strip "Estimate!!Total:!!" from other column headers
 
         
-        print(list(censusData.columns))
+        # print(list(censusData.columns))
+        print(censusData.iloc[:5, :4])
 
         # censusData.to_csv("cleanData.csv") # create new file for data output
 
