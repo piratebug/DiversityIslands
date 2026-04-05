@@ -1,5 +1,5 @@
 """
-Date: May 2025
+Last Updated: 5 April 2026
 Project: Prep Census Data tool to clean up demographic census .csv's before
 running Diversity Index Calculator.
 
@@ -9,7 +9,10 @@ X remove second column (geographic area name)
 X remove all columns that contain "margin of error"
 X rename first column header TotalPop
 X remove "Estimate!!Total:!!" from all other column headers
+X remove "Two or more races:!!" from all other column headers
 X calculate FIPS from GeoID (right 11 digits)
+- creates "Total AAPI" column (sum of Asian & Native Hawaiian and Pacific Islander)
+- creates "Total Multiracial" column (sum of all "Two or more" cateogries)
 """
 # Imports
 import numpy as np
@@ -53,7 +56,7 @@ def cleanData(censusData):
                 newCol = col.removeprefix("Estimate!!Total:!!")
                 censusData = censusData.rename(columns={col: newCol})
                 
-        # further simplify column headers - remove "Two or more races:!!", rename
+        # further simplify column headers - remove "Two or more races:!!"
         for col in censusData.columns:
             if "Two or more races:!!" in col:
                 newCol = col.removeprefix("Two or more races:!!")
