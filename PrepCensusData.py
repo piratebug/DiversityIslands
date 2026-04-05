@@ -47,10 +47,16 @@ def cleanData(censusData):
         # rename first column header TotalPop
         censusData = censusData.rename(columns={"Estimate!!Total:": "TotalPop"})
 
-        # strip "Estimate!!Total:!!" from other column headers  **WHY DO THE T'S GO MISSING??**
+        # strip "Estimate!!Total:!!" from other column headers
         for col in censusData.columns:
             if "Estimate!!Total:!!" in col:
-                newCol = col.lstrip("Estimate!!Total:!!")
+                newCol = col.removeprefix("Estimate!!Total:!!")
+                censusData = censusData.rename(columns={col: newCol})
+                
+        # further simplify column headers - remove "Two or more races:!!", rename
+        for col in censusData.columns:
+            if "Two or more races:!!" in col:
+                newCol = col.removeprefix("Two or more races:!!")
                 censusData = censusData.rename(columns={col: newCol})
      
         # create FIPS from GEOID (Geography column) by removing first 9 characters
@@ -64,9 +70,9 @@ def cleanData(censusData):
         censusData = censusData.drop(['Geography'], axis=1)
         
         # print(list(censusData.columns))
-        print(censusData.iloc[:5, :6])
+        print(censusData.iloc[:5, :])
 
-        # censusData.to_csv("cleanData.csv") # create new file for data output
+        censusData.to_csv("cleanData.csv") # create new file for data output
 
     except Exception as issue:
         print("Oops! An error occured: ", issue)
