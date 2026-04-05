@@ -8,7 +8,7 @@ X remove first row & last row
 X remove second column (geographic area name)
 X remove all columns that contain "margin of error"
 X rename first column header TotalPop
-- remove "Estimate!!Total:!!" from all other column headers
+X remove "Estimate!!Total:!!" from all other column headers
 - calculate FIPS from GeoID (right 11 digits)
 """
 # Imports
@@ -48,10 +48,15 @@ def cleanData(censusData):
         censusData = censusData.rename(columns={"Estimate!!Total:": "TotalPop"})
 
         # strip "Estimate!!Total:!!" from other column headers
+        for col in censusData.columns:
+            if "Estimate!!Total:!!" in col:
+                newCol = col.lstrip("Estimate!!Total:!!")
+                censusData = censusData.rename(columns={col: newCol})
+     
 
         
         # print(list(censusData.columns))
-        print(censusData.iloc[:5, :4])
+        print(censusData.iloc[:5, :6])
 
         # censusData.to_csv("cleanData.csv") # create new file for data output
 
