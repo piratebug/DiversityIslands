@@ -47,12 +47,17 @@ def cleanData(censusData):
         # rename first column header TotalPop
         censusData = censusData.rename(columns={"Estimate!!Total:": "TotalPop"})
 
-        # strip "Estimate!!Total:!!" from other column headers
+        # strip "Estimate!!Total:!!" from other column headers  **WHY DO THE T'S GO MISSING??**
         for col in censusData.columns:
             if "Estimate!!Total:!!" in col:
                 newCol = col.lstrip("Estimate!!Total:!!")
                 censusData = censusData.rename(columns={col: newCol})
      
+        # create FIPS from GEOID (Geography column) by removing first 9 characters
+        fips = [geoid[9:] for geoid in censusData.Geography]
+        
+        censusData["FIPS"] = fips
+
 
         
         # print(list(censusData.columns))
