@@ -9,7 +9,7 @@ X remove second column (geographic area name)
 X remove all columns that contain "margin of error"
 X rename first column header TotalPop
 X remove "Estimate!!Total:!!" from all other column headers
-- calculate FIPS from GeoID (right 11 digits)
+X calculate FIPS from GeoID (right 11 digits)
 """
 # Imports
 import numpy as np
@@ -55,10 +55,13 @@ def cleanData(censusData):
      
         # create FIPS from GEOID (Geography column) by removing first 9 characters
         fips = [geoid[9:] for geoid in censusData.Geography]
-        
         censusData["FIPS"] = fips
+        # move it to the front
+        last_col = censusData.iloc[:, -1]
+        censusData = pd.concat([last_col, censusData.iloc[:, :-1]], axis=1)
 
-
+        # remove Geography column
+        censusData = censusData.drop(['Geography'], axis=1)
         
         # print(list(censusData.columns))
         print(censusData.iloc[:5, :6])
