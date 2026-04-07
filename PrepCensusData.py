@@ -72,19 +72,34 @@ def cleanData(censusData):
         # remove Geography column
         censusData = censusData.drop(['Geography'], axis=1)
 
-        # create AAPI column by summing Asian & Native Hawaiian and Pacific Islander columns
-        censusData["AAPI"] = censusData["Asian alone"] + censusData["Native Hawaiian and Other Pacific Islander alone"]
+        # simplify column names
+        censusData = censusData.rename(columns={
+            "White alone": "White_Alone",
+            "Black or African American alone": "Black_AA_Alone",
+            "American Indian and Alaska Native alone": "AIAN_Alone",
+            "Asian alone": "Asian_Alone",
+            "Native Hawaiian and Other Pacific Islander alone": "NHPI_Alone",
+            "Some other race alone": "Other_Alone",
+            "Two or more races:": "Two_Plus",
+            "Two races including Some other race": "Two_Incl_Other",
+            "Two races excluding Some other race, and three or more races": "Two_Excl_Other_Three_Plus"
+        })
 
-        # print(list(censusData.columns))
-        print(censusData.iloc[:5, :])
+
+
+        # create AAPI column by summing Asian & Native Hawaiian and Pacific Islander columns
+        censusData["AAPI"] = censusData["Asian_Alone"] + censusData["NHPI_Alone"]
+
+        print(list(censusData.columns))
+        print(censusData.iloc[:5, 3:])
 
         # create multiracial column from all two or more columns
-        censusData["All Multiracial"] = censusData["Two or more races:"] + censusData["Two races including Some other race"] + censusData["Two races excluding Some other race, and three or more races"]
-        # ERROR - it's concatenating the numbers, so they must be strings. That's a tomorrow problem
+        # censusData["All Multiracial"] = censusData["Two or more races:"] + censusData["Two races including Some other race"] + censusData["Two races excluding Some other race, and three or more races"]
+        # ERROR - it's concatenating the numbers, so they must be strings. That's a tomorrow problem. CHECK AAPI TOO
 
 
         # export refined data to new .csv
-        censusData.to_csv("cleanData.csv") # create new file for data output
+        # censusData.to_csv("cleanData.csv") # create new file for data output
 
     except Exception as issue:
         print("Oops! An error occured: ", issue)
