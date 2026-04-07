@@ -1,5 +1,5 @@
 """
-Last Updated: 5 April 2026
+Last Updated: 7 April 2026
 Project: Prep Census Data tool to clean up demographic census .csv's before
 running Diversity Index Calculator.
 
@@ -12,7 +12,9 @@ X remove "Estimate!!Total:!!" from all other column headers
 X remove "Two or more races:!!" from all other column headers
 X calculate FIPS from GeoID (right 11 digits)
 X creates "Total AAPI" column (sum of Asian & Native Hawaiian and Pacific Islander)
-- creates "Total Multiracial" column (sum of all "Two or more" cateogries)
+X creates "Total Multiracial" column (sum of all "Two or more" cateogries)
+
+Next task: add user functionality
 """
 # Imports
 import numpy as np
