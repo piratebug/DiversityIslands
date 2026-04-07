@@ -11,7 +11,7 @@ X rename first column header TotalPop
 X remove "Estimate!!Total:!!" from all other column headers
 X remove "Two or more races:!!" from all other column headers
 X calculate FIPS from GeoID (right 11 digits)
-- creates "Total AAPI" column (sum of Asian & Native Hawaiian and Pacific Islander)
+X creates "Total AAPI" column (sum of Asian & Native Hawaiian and Pacific Islander)
 - creates "Total Multiracial" column (sum of all "Two or more" cateogries)
 """
 # Imports
@@ -43,7 +43,7 @@ def cleanData(censusData):
         # remove last column (a rogue NaN)  ***NEED TO WRITE A TEST FOR THIS, NOT SURE WHY IT SHOWS UP***
         censusData = censusData.iloc[:,:-1]
 
-        # delete all columns containing 'margin of error' // there's a rogue np.flat64(nan) column at the end of my df that's forking things up
+        # delete all columns containing 'margin of error' 
         marginsOfError = [col for col in censusData.columns if "Margin of Error" in col]
         censusData.drop(censusData[marginsOfError], axis=1, inplace = True)
 
@@ -71,10 +71,14 @@ def cleanData(censusData):
 
         # remove Geography column
         censusData = censusData.drop(['Geography'], axis=1)
-        
+
+        # create AAPI column by summing Asian & Native Hawaiian and Pacific Islander columns
+        censusData["AAPI"] = censusData["Asian alone"] + censusData["Native Hawaiian and Other Pacific Islander alone"]
+
         # print(list(censusData.columns))
         print(censusData.iloc[:5, :])
 
+        # export refined data to new .csv
         censusData.to_csv("cleanData.csv") # create new file for data output
 
     except Exception as issue:
