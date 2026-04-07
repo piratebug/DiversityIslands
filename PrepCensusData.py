@@ -91,6 +91,10 @@ def cleanData(censusData):
         # create AAPI column by summing Asian & Native Hawaiian and Pacific Islander columns
         censusData["AAPI"] = censusData["Asian_Alone"] + censusData["NHPI_Alone"]
 
+        # relocate AAPI to a spot that makes sense
+        col = censusData.pop("AAPI")
+        censusData.insert(7, "AAPI", col)
+
         # create multiracial column from all two or more columns
         censusData["Total_Multiracial"] = censusData["Two_Plus"] + censusData["Two_Incl_Other"] + censusData["Two_Excl_Other_Three_Plus"]
 
@@ -98,7 +102,7 @@ def cleanData(censusData):
         print(censusData.iloc[:5, 3:])
 
         # export refined data to new .csv
-        # censusData.to_csv("cleanData.csv") # create new file for data output
+        censusData.to_csv("cleanData.csv")
 
     except Exception as issue:
         print("Oops! An error occured: ", issue)
