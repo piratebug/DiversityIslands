@@ -78,6 +78,11 @@ def cleanData(censusData):
         # print(list(censusData.columns))
         print(censusData.iloc[:5, :])
 
+        # create multiracial column from all two or more columns
+        censusData["All Multiracial"] = censusData["Two or more races:"] + censusData["Two races including Some other race"] + censusData["Two races excluding Some other race, and three or more races"]
+        # ERROR - it's concatenating the numbers, so they must be strings. That's a tomorrow problem
+
+
         # export refined data to new .csv
         censusData.to_csv("cleanData.csv") # create new file for data output
 
