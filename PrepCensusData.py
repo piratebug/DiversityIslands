@@ -85,18 +85,17 @@ def cleanData(censusData):
             "Two races excluding Some other race, and three or more races": "Two_Excl_Other_Three_Plus"
         })
 
-
+        # convert all columns from strings to numbers
+        censusData = censusData.apply(pd.to_numeric)
 
         # create AAPI column by summing Asian & Native Hawaiian and Pacific Islander columns
         censusData["AAPI"] = censusData["Asian_Alone"] + censusData["NHPI_Alone"]
 
+        # create multiracial column from all two or more columns
+        censusData["Total_Multiracial"] = censusData["Two_Plus"] + censusData["Two_Incl_Other"] + censusData["Two_Excl_Other_Three_Plus"]
+
         print(list(censusData.columns))
         print(censusData.iloc[:5, 3:])
-
-        # create multiracial column from all two or more columns
-        # censusData["All Multiracial"] = censusData["Two or more races:"] + censusData["Two races including Some other race"] + censusData["Two races excluding Some other race, and three or more races"]
-        # ERROR - it's concatenating the numbers, so they must be strings. That's a tomorrow problem. CHECK AAPI TOO
-
 
         # export refined data to new .csv
         # censusData.to_csv("cleanData.csv") # create new file for data output
