@@ -19,11 +19,19 @@ Next task: add user functionality
 # Imports
 import numpy as np
 import pandas as pd
+import tkinter as tk
+from tkinter import filedialog
 # import argparse  # lets you prompt users for arguments, gives error when not supplied
 # from pathlib import Path  # makes the input text an actual file path
 
 # Inputs
-censusData = pd.read_csv("complexSample.csv") #arcpy.GetParameterAsText(0)  #OR your file path here
+## create root window
+root = tk.Tk()
+root.withdraw()
+
+## bring in the file
+file_path = filedialog.askopenfilename()
+censusData = pd.read_csv(file_path) #arcpy.GetParameterAsText(0)  #OR your file path here
 
 
 # Calculations
