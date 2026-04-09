@@ -17,7 +17,6 @@ X creates "Total Multiracial" column (sum of all "Two or more" cateogries)
 Next task: add user functionality
 """
 # Imports
-import numpy as np
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
@@ -30,8 +29,9 @@ root = tk.Tk()
 root.withdraw()
 
 ## bring in the file
-file_path = filedialog.askopenfilename()
-censusData = pd.read_csv(file_path) #arcpy.GetParameterAsText(0)  #OR your file path here
+inputFile = filedialog.askopenfilename()
+
+censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file path here
 
 
 # Calculations
