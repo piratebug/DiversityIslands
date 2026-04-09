@@ -4,6 +4,7 @@ Project: Prep Census Data tool to clean up demographic census .csv's before
 running Diversity Index Calculator.
 
 functionality includes...
+For RACE dataset:
 X remove first row & last row
 X remove second column (geographic area name)
 X remove all columns that contain "margin of error"
@@ -13,6 +14,8 @@ X remove "Two or more races:!!" from all other column headers
 X calculate FIPS from GeoID (right 11 digits)
 X creates "Total AAPI" column (sum of Asian & Native Hawaiian and Pacific Islander)
 X creates "Total Multiracial" column (sum of all "Two or more" cateogries)
+For AGE/GENDER dataset:
+
 
 Next task: add user functionality
 """
@@ -36,6 +39,12 @@ censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file 
 
 # Calculations
 def cleanData(censusData):
+    # create an IF check to determine if it's a Race or Age/Gender file, direct to correct function
+    # cleanRaceData(censusData)
+    cleanAgeGenderData(censusData)
+    # pass 
+
+def cleanRaceData(censusData):
     try:
         print(censusData[:5]) # for testing
 
@@ -117,6 +126,12 @@ def cleanData(censusData):
     except Exception as issue:
         print("Oops! An error occured: ", issue)
 
+def cleanAgeGenderData(censuData):
+    try:
+        print("hello world")
+    
+    except Exception as issue:
+        print("Oops! An error occured: ", issue)
 
 
 if __name__ == "__main__":
