@@ -18,7 +18,7 @@ X creates "Total Multiracial" column (sum of all "Two or more" cateogries)
 
 For AGE/GENDER dataset:
 X remove first row & last row
-- remove second column (geographic area name)
+X remove second column (geographic area name)
 - remove all columns that contain "margin of error"
 - remove final row
 - rename first column header TotalPop
@@ -148,7 +148,17 @@ def cleanAgeGenderData(censusData):
 
         # delete last row
         censusData = censusData.iloc[:-1]
+        
+        # remove second column
+        censusData = censusData.drop(['Geographic Area Name'], axis=1)
+
+        # remove last column (a rogue NaN)  ***NEED TO WRITE A TEST FOR THIS, NOT SURE WHY IT SHOWS UP***
+        censusData = censusData.iloc[:,:-1]
  
+        # delete all columns containing 'margin of error' 
+        marginsOfError = [col for col in censusData.columns if "Margin of Error" in col]
+        censusData.drop(censusData[marginsOfError], axis=1, inplace = True)
+
         print(censusData[120:]) # for testing
     
     except Exception as issue:
