@@ -17,7 +17,7 @@ X creates "Total AAPI" column (sum of Asian & Native Hawaiian and Pacific Island
 X creates "Total Multiracial" column (sum of all "Two or more" cateogries)
 
 For AGE/GENDER dataset:
-- remove first row & last row
+X remove first row & last row
 - remove second column (geographic area name)
 - remove all columns that contain "margin of error"
 - remove final row
@@ -138,9 +138,18 @@ def cleanRaceData(censusData):
     except Exception as issue:
         print("Oops! An error occured: ", issue)
 
-def cleanAgeGenderData(censuData):
+def cleanAgeGenderData(censusData):
     try:
-        print("hello world")
+        print(censusData[:5]) # for testing
+
+        # set headers to the the contents of the first row, then delete first row
+        censusData.columns = censusData.iloc[0]
+        censusData.drop(0, inplace = True)
+
+        # delete last row
+        censusData = censusData.iloc[:-1]
+ 
+        print(censusData[120:]) # for testing
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
