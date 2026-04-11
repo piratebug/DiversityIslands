@@ -172,6 +172,35 @@ def cleanAgeGenderData(censusData):
                 newCol = col.removeprefix("Estimate!!Total:!!")
                 censusData = censusData.rename(columns={col: newCol})
 
+        # simplying column heads to use M and F
+        for col in censusData.columns:
+            if "Male:!!" in col:
+                newCol = col.replace("Male:!!", "M_")
+                censusData = censusData.rename(columns={col: newCol})
+            elif "Female:!!" in col:
+                newCol = col.replace("Female:!!", "F_")
+                censusData = censusData.rename(columns={col: newCol})
+
+        # further simplify columns to remove 'years' and eliminate spaces
+        for col in censusData.columns:
+            if "years and over" in col:
+                newCol = col.replace(" years and over", "+")
+            else:
+                newCol = col.removesuffix(" years")
+                if "Under" in newCol:
+                    newCol = newCol.replace("Under ", "under")
+                elif "and" in newCol:
+                    newCol = newCol.replace(" and ", "and")
+                else:
+                    newCol = newCol.replace(" to ", "to")                
+            censusData = censusData.rename(columns={col: newCol})
+
+        # simplify column names
+        censusData = censusData.rename(columns={
+            "Male:": "totalMale",
+            "Female:": "totalFemale"
+        })
+
         # print(censusData[120:]) # for testing
         print(list(censusData.columns))
     
