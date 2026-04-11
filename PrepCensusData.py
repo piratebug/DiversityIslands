@@ -23,8 +23,8 @@ X remove all columns that contain "margin of error"
 X remove final column
 X rename first column header TotalPop
 X remove "Estimate!!Total:!!" from all other column headers
-- simplify column headers
-- calculate FIPS from GeoID (convert to numeric)
+X simplify column headers
+X calculate FIPS from GeoID (convert to numeric)
 - create new columns, grouping ages by decades for each gender
 - create new columns, summing ages by decades for total population (M + F)
 - remove excess columns
@@ -201,8 +201,18 @@ def cleanAgeGenderData(censusData):
             "Female:": "totalFemale"
         })
 
-        # print(censusData[120:]) # for testing
-        print(list(censusData.columns))
+        # create FIPS from GEOID (Geography column) by removing first 9 characters
+        fips = [geoid[9:] for geoid in censusData.Geography]
+        censusData["FIPS"] = fips
+        # move it to the front
+        last_col = censusData.iloc[:, -1]
+        censusData = pd.concat([last_col, censusData.iloc[:, :-1]], axis=1)
+
+        # remove Geography column
+        censusData = censusData.drop(['Geography'], axis=1)
+
+        print(censusData[120:]) # for testing
+        # print(list(censusData.columns))
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
