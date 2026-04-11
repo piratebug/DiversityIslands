@@ -1,5 +1,5 @@
 """
-Last Updated: 7 April 2026
+Last Updated: 11 April 2026
 Project: Prep Census Data tool to clean up demographic census .csv's before
 running Diversity Index Calculator.
 
@@ -19,10 +19,10 @@ X creates "Total Multiracial" column (sum of all "Two or more" cateogries)
 For AGE/GENDER dataset:
 X remove first row & last row
 X remove second column (geographic area name)
-- remove all columns that contain "margin of error"
-- remove final row
-- rename first column header TotalPop
-- remove "Estimate!!Total:!!" from all other column headers
+X remove all columns that contain "margin of error"
+X remove final column
+X rename first column header TotalPop
+X remove "Estimate!!Total:!!" from all other column headers
 - simplify column headers
 - calculate FIPS from GeoID (convert to numeric)
 - create new columns, grouping ages by decades for each gender
@@ -159,7 +159,21 @@ def cleanAgeGenderData(censusData):
         marginsOfError = [col for col in censusData.columns if "Margin of Error" in col]
         censusData.drop(censusData[marginsOfError], axis=1, inplace = True)
 
-        print(censusData[120:]) # for testing
+        # delete all columns containing 'margin of error' 
+        marginsOfError = [col for col in censusData.columns if "Margin of Error" in col]
+        censusData.drop(censusData[marginsOfError], axis=1, inplace = True)
+
+        # rename first column header TotalPop
+        censusData = censusData.rename(columns={"Estimate!!Total:": "TotalPop"})
+
+        # strip "Estimate!!Total:!!" from other column headers
+        for col in censusData.columns:
+            if "Estimate!!Total:!!" in col:
+                newCol = col.removeprefix("Estimate!!Total:!!")
+                censusData = censusData.rename(columns={col: newCol})
+
+        # print(censusData[120:]) # for testing
+        print(list(censusData.columns))
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
