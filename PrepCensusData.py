@@ -225,6 +225,46 @@ def cleanAgeGenderData(censusData):
         col = censusData.pop("totalUnder20")
         censusData.insert(4, "totalUnder20", col)
 
+        ## under 30
+        censusData["totalUnder30"] = censusData["M_20"] + censusData["M_21"] + censusData["M_22to24"] + censusData["M_25to29"] + censusData["F_20"] + censusData["F_21"] + censusData["F_22to24"] + censusData["F_25to29"]
+        col = censusData.pop("totalUnder30")
+        censusData.insert(5, "totalUnder30", col)
+
+        ## under 40
+        censusData["totalUnder40"] = censusData["M_30to34"] + censusData["M_35to39"] + censusData["F_30to34"] + censusData["F_35to39"]
+        col = censusData.pop("totalUnder40")
+        censusData.insert(6, "totalUnder40", col)
+
+        ## under 50
+        censusData["totalUnder50"] = censusData["M_40to44"] + censusData["M_45to49"] + censusData["F_40to44"] + censusData["F_45to49"]
+        col = censusData.pop("totalUnder50")
+        censusData.insert(7, "totalUnder50", col)
+
+        ## under 60
+        censusData["totalUnder60"] = censusData["M_50to54"] + censusData["M_55to59"] + censusData["F_50to54"] + censusData["F_55to59"]
+        col = censusData.pop("totalUnder60")
+        censusData.insert(8, "totalUnder60", col)
+
+        ## under 70
+        censusData["totalUnder70"] = censusData["M_60and61"] + censusData["M_62to64"] + censusData["M_65and66"] + censusData["M_67to69"] + censusData["F_60and61"] + censusData["F_62to64"] + censusData["F_65and66"] + censusData["F_67to69"]
+        col = censusData.pop("totalUnder70")
+        censusData.insert(9, "totalUnder70", col)
+
+        ## under 80
+        censusData["totalUnder80"] = censusData["M_70to74"] + censusData["M_75to79"] + censusData["F_70to74"] + censusData["F_75to79"]
+        col = censusData.pop("totalUnder80")
+        censusData.insert(10, "totalUnder80", col)
+
+        ## 80 plus
+        censusData["total80+"] = censusData["M_80to84"] + censusData["M_85+"] + censusData["F_80to84"] + censusData["F_85+"]
+        col = censusData.pop("total80+")
+        censusData.insert(11, "total80+", col)
+
+        # testing accuracy of calculations
+        # censusData["totalsA"] = censusData["totalUnder10"] + censusData["totalUnder20"] + censusData["totalUnder30"] + censusData["totalUnder40"] + censusData["totalUnder50"] + censusData["totalUnder60"] + censusData["totalUnder70"] + censusData["totalUnder80"] + censusData["total80+"]
+        # censusData["totalsB"] = censusData["totalMale"] + censusData["totalFemale"]
+
+
         print(censusData[:5]) # for testing
         print(list(censusData.columns))
     
