@@ -25,8 +25,7 @@ X rename first column header TotalPop
 X remove "Estimate!!Total:!!" from all other column headers
 X simplify column headers
 X calculate FIPS from GeoID (convert to numeric)
-- create new columns, grouping ages by decades for each gender
-- create new columns, summing ages by decades for total population (M + F)
+- create new columns, grouping ages by decades
 - remove excess columns
 
 Next task: add user functionality
@@ -129,8 +128,8 @@ def cleanRaceData(censusData):
         # create multiracial column from all two or more columns
         censusData["Total_Multiracial"] = censusData["Two_Plus"] + censusData["Two_Incl_Other"] + censusData["Two_Excl_Other_Three_Plus"]
 
-        print(list(censusData.columns))
-        print(censusData.iloc[:5, 3:])
+        # print(list(censusData.columns))
+        # print(censusData.iloc[:5, 3:])
 
         # export refined data to new .csv
         censusData.to_csv("cleanRaceData.csv")
@@ -211,8 +210,23 @@ def cleanAgeGenderData(censusData):
         # remove Geography column
         censusData = censusData.drop(['Geography'], axis=1)
 
-        print(censusData[120:]) # for testing
-        # print(list(censusData.columns))
+        # make all columns numeric
+        censusData = censusData.apply(pd.to_numeric)
+
+        # create columns grouping age in decades, combining M and F
+        ## under 10
+        censusData["totalUnder10"] = censusData["M_under5"] + censusData["M_5to9"] + censusData["F_under5"] + censusData["F_5to9"]
+        ## relocating total age groups to front
+        col = censusData.pop("totalUnder10")
+        censusData.insert(3, "totalUnder10", col)
+
+        ## under 20
+        censusData["totalUnder20"] = censusData["M_10to14"] + censusData["M_15to17"] + censusData["M_18and19"] + censusData["F_10to14"] + censusData["F_15to17"] + censusData["F_18and19"]
+        col = censusData.pop("totalUnder20")
+        censusData.insert(4, "totalUnder20", col)
+
+        print(censusData[:5]) # for testing
+        print(list(censusData.columns))
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
