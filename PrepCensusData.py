@@ -260,13 +260,18 @@ def cleanAgeGenderData(censusData):
         col = censusData.pop("total80+")
         censusData.insert(11, "total80+", col)
 
+
+        # relocate totalFemale column
+        col = censusData.pop("totalFemale")
+        censusData.insert(3, "totalFemale", col)
+
         # testing accuracy of calculations
         # censusData["totalsA"] = censusData["totalUnder10"] + censusData["totalUnder20"] + censusData["totalUnder30"] + censusData["totalUnder40"] + censusData["totalUnder50"] + censusData["totalUnder60"] + censusData["totalUnder70"] + censusData["totalUnder80"] + censusData["total80+"]
         # censusData["totalsB"] = censusData["totalMale"] + censusData["totalFemale"]
 
 
         print(censusData[:5]) # for testing
-        print(list(censusData.columns))
+        # print(list(censusData.columns))
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
