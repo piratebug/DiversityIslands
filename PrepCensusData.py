@@ -1,9 +1,11 @@
 """
-Last Updated: 11 April 2026
+Last Updated: 13 April 2026
 Project: Prep Census Data tool to clean up demographic census .csv's before
 running Diversity Index Calculator.
 
 functionality includes...
+
+- determine if RACE or AGE/GENDER dataset submitted
 
 For RACE dataset:
 X remove first row & last row
@@ -25,8 +27,8 @@ X rename first column header TotalPop
 X remove "Estimate!!Total:!!" from all other column headers
 X simplify column headers
 X calculate FIPS from GeoID (convert to numeric)
-- create new columns, grouping ages by decades
-- remove excess columns
+X create new columns, grouping ages by decades
+X remove excess columns
 
 Next task: add user functionality
 """
@@ -260,15 +262,16 @@ def cleanAgeGenderData(censusData):
         col = censusData.pop("total80+")
         censusData.insert(11, "total80+", col)
 
+        # testing accuracy of calculations
+        # censusData["totalsA"] = censusData["totalUnder10"] + censusData["totalUnder20"] + censusData["totalUnder30"] + censusData["totalUnder40"] + censusData["totalUnder50"] + censusData["totalUnder60"] + censusData["totalUnder70"] + censusData["totalUnder80"] + censusData["total80+"]
+        # censusData["totalsB"] = censusData["totalMale"] + censusData["totalFemale"]
 
         # relocate totalFemale column
         col = censusData.pop("totalFemale")
         censusData.insert(3, "totalFemale", col)
 
-        # testing accuracy of calculations
-        # censusData["totalsA"] = censusData["totalUnder10"] + censusData["totalUnder20"] + censusData["totalUnder30"] + censusData["totalUnder40"] + censusData["totalUnder50"] + censusData["totalUnder60"] + censusData["totalUnder70"] + censusData["totalUnder80"] + censusData["total80+"]
-        # censusData["totalsB"] = censusData["totalMale"] + censusData["totalFemale"]
-
+        # drop extra columns
+        censusData.drop(censusData.iloc[:, 13:], axis=1, inplace = True)
 
         print(censusData[:5]) # for testing
         # print(list(censusData.columns))
