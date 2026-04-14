@@ -1,11 +1,13 @@
 """
-Last Updated: 13 April 2026
+Last Updated: 14 April 2026
 Project: Prep Census Data tool to clean up demographic census .csv's before
 running Diversity Index Calculator.
 
 functionality includes...
 
-- determine if RACE or AGE/GENDER dataset submitted
+- take multiple csv's as input
+- read csv's one at a time
+X determine if RACE or AGE/GENDER dataset submitted, direct to correct function
 
 For RACE dataset:
 X remove first row & last row
@@ -30,7 +32,9 @@ X calculate FIPS from GeoID (convert to numeric)
 X create new columns, grouping ages by decades
 X remove excess columns
 
-Next task: add user functionality
+- Combine final results for RACE and AGE & GENDER into one final output
+
+Next task: accept and process multiple csv's
 """
 # Imports
 import pandas as pd
