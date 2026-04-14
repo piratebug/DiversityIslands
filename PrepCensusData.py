@@ -53,9 +53,15 @@ censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file 
 # Calculations
 def cleanData(censusData):
     # create an IF check to determine if it's a Race or Age/Gender file, direct to correct function
-    # cleanRaceData(censusData)
-    cleanAgeGenderData(censusData)
-    # pass 
+    if "B01001" in inputFile:
+        cleanAgeGenderData(censusData) 
+    elif "B02001" in inputFile:
+        cleanRaceData(censusData)
+    else:
+        print("Sorry! This filename has either been edited or is not supported by this program. Please review the " \
+        "readme and submit a file that contains B01001 or B02001.")
+
+    
 
 def cleanRaceData(censusData):
     try:
