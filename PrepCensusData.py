@@ -48,28 +48,30 @@ from tkinter import filedialog
 root = tk.Tk()
 root.withdraw()
 
-## bring in the file
-inputFile = filedialog.askopenfilename()
+## bring in the files
+inputFiles = filedialog.askopenfilenames()
 
-censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file path here
 
 
 # Calculations
-def cleanData(censusData):
-    # create an IF check to determine if it's a Race or Age/Gender file, direct to correct function
-    if "B01001" in inputFile:
-        cleanAgeGenderData(censusData) 
-    elif "B02001" in inputFile:
-        cleanRaceData(censusData)
-    else:
-        print("Sorry! This filename has either been edited or is not supported by this program. Please review the " \
-        "readme and submit a file that contains B01001 or B02001.")
+def cleanData(inputFiles):
+    for inputFile in inputFiles:
+        censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file path here
+
+        # determine if the file is a Race or Age/Gender file, direct to correct function
+        if "B01001" in inputFile:
+            cleanAgeGenderData(censusData) 
+        elif "B02001" in inputFile:
+            cleanRaceData(censusData)
+        else:
+            raise Exception("Sorry! This filename has either been edited or is not supported by this program. Please review the " \
+            "readme and submit a file that contains B01001 or B02001.")
 
     
 
 def cleanRaceData(censusData):
     try:
-        print(censusData[:5]) # for testing
+        # print(censusData[:5]) # for testing
 
         # set headers to the the contents of the first row, then delete first row
         censusData.columns = censusData.iloc[0]
@@ -144,14 +146,15 @@ def cleanRaceData(censusData):
         # print(censusData.iloc[:5, 3:])
 
         # export refined data to new .csv
-        censusData.to_csv("cleanRaceData.csv")
+        # censusData.to_csv("cleanRaceData.csv")
+        print("Race complete")
 
     except Exception as issue:
         print("Oops! An error occured: ", issue)
 
 def cleanAgeGenderData(censusData):
     try:
-        print(censusData[:5]) # for testing
+        # print(censusData[:5]) # for testing
 
         # set headers to the the contents of the first row, then delete first row
         censusData.columns = censusData.iloc[0]
@@ -283,8 +286,8 @@ def cleanAgeGenderData(censusData):
         # drop extra columns
         censusData.drop(censusData.iloc[:, 13:], axis=1, inplace = True)
 
-        print(censusData[:5]) # for testing
-        # print(list(censusData.columns))
+        # print(censusData[:5]) # for testing
+        print("Age & Gender complete")
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
@@ -295,4 +298,4 @@ if __name__ == "__main__":
     # parser.add_argument("inputFile", type=Path) # makes the input text an actual file path
     # results = parser.parse_args()
     # print(results)
-    cleanData(censusData)
+    cleanData(inputFiles)
