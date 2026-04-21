@@ -55,19 +55,25 @@ inputFiles = filedialog.askopenfilenames()
 
 # Calculations
 def cleanData(inputFiles):
+    results = []
+
     for inputFile in inputFiles:
         censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file path here
-
+        
         # determine if the file is a Race or Age/Gender file, direct to correct function
         if "B01001" in inputFile:
-            cleanAgeGenderData(censusData) 
+            result = cleanAgeGenderData(censusData)
         elif "B02001" in inputFile:
-            cleanRaceData(censusData)
+            result = cleanRaceData(censusData)
         else:
             raise Exception("Sorry! This filename has either been edited or is not supported by this program. Please review the " \
             "readme and submit a file that contains B01001 or B02001.")
+        
+        results.append(result)
 
-    
+    censusData = pd.concat(results)
+    censusData.to_csv("cleanData.csv")  # concat is stacking the data - it needs to be joined to the same rows by FIPS
+
 
 def cleanRaceData(censusData):
     try:
@@ -148,6 +154,7 @@ def cleanRaceData(censusData):
         # export refined data to new .csv
         # censusData.to_csv("cleanRaceData.csv")
         print("Race complete")
+        return(censusData)
 
     except Exception as issue:
         print("Oops! An error occured: ", issue)
@@ -288,6 +295,8 @@ def cleanAgeGenderData(censusData):
 
         # print(censusData[:5]) # for testing
         print("Age & Gender complete")
+
+        return censusData
     
     except Exception as issue:
         print("Oops! An error occured: ", issue)
