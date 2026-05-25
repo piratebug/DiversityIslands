@@ -71,7 +71,7 @@ def cleanData(inputFiles):
         
         results.append(result)
 
-    censusData = pd.concat(results)
+    censusData = pd.concat(results, axis = "columns")
     censusData.to_csv("cleanData.csv")  # concat is stacking the data - it needs to be joined to the same rows by FIPS
 
 
