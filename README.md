@@ -4,7 +4,7 @@ In order to run this project, download and install uv here: https://docs.astral.
 ## Parts
 This project (in progress) contains multiple parts.
 
-1. Prepping the US Census data file
+1. Prepping the US Census data file (works for 2024 ACS Detailed Tables)
 2. The Diversity Index Calculator
 
 
