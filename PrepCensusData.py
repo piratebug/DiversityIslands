@@ -71,7 +71,7 @@ def cleanData(inputFiles):
         
         results.append(result)
 
-    censusData = pd.concat(results, axis = "columns")
+    censusData = pd.concat(results)
     censusData.to_csv("cleanData.csv")  # concat is stacking the data - it needs to be joined to the same rows by FIPS
 
 
@@ -108,7 +108,7 @@ def cleanRaceData(censusData):
                 
         # further simplify column headers - remove "Two or more races:!!"
         for col in censusData.columns:
-            if "Two or more races:!!" in col:
+            if "Two or More Races:!!" in col:
                 newCol = col.removeprefix("Two or more races:!!")
                 censusData = censusData.rename(columns={col: newCol})
      
@@ -148,8 +148,8 @@ def cleanRaceData(censusData):
         # create multiracial column from all two or more columns
         censusData["Total_Multiracial"] = censusData["Two_Plus"] + censusData["Two_Incl_Other"] + censusData["Two_Excl_Other_Three_Plus"]
 
-        # print(list(censusData.columns))
-        # print(censusData.iloc[:5, 3:])
+        print(list(censusData.columns))
+        print(censusData.iloc[:5, 3:])
 
         # export refined data to new .csv
         # censusData.to_csv("cleanRaceData.csv")
