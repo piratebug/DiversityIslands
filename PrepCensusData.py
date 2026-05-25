@@ -55,23 +55,20 @@ inputFiles = filedialog.askopenfilenames()
 
 # Calculations
 def cleanData(inputFiles):
-    results = []
 
     for inputFile in inputFiles:
         censusData = pd.read_csv(inputFile) #arcpy.GetParameterAsText(0)  #OR your file path here
         
         # determine if the file is a Race or Age/Gender file, direct to correct function
         if "B01001" in inputFile:
-            result = cleanAgeGenderData(censusData)
+            resultA = cleanAgeGenderData(censusData)
         elif "B02001" in inputFile:
-            result = cleanRaceData(censusData)
+            resultB = cleanRaceData(censusData)
         else:
             raise Exception("Sorry! This filename has either been edited or is not supported by this program. Please review the " \
             "readme and submit a file that contains B01001 or B02001.")
         
-        results.append(result)
-
-    censusData = pd.concat(results)
+    censusData = pd.merge(resultA, resultB, on = "FIPS")
     censusData.to_csv("cleanData.csv")  # concat is stacking the data - it needs to be joined to the same rows by FIPS
 
 
@@ -109,10 +106,10 @@ def cleanRaceData(censusData):
         # further simplify column headers - remove "Two or more races:!!"
         for col in censusData.columns:
             if "Two or More Races:!!" in col:
-                newCol = col.removeprefix("Two or more races:!!")
+                newCol = col.removeprefix("Two or More Races:!!")
                 censusData = censusData.rename(columns={col: newCol})
-     
-        # create FIPS from GEOID (Geography column) by removing first 9 characters
+
+           # create FIPS from GEOID (Geography column) by removing first 9 characters
         fips = [geoid[9:] for geoid in censusData.Geography]
         censusData["FIPS"] = fips
         # move it to the front
@@ -129,10 +126,10 @@ def cleanRaceData(censusData):
             "American Indian and Alaska Native alone": "AIAN_Alone",
             "Asian alone": "Asian_Alone",
             "Native Hawaiian and Other Pacific Islander alone": "NHPI_Alone",
-            "Some other race alone": "Other_Alone",
-            "Two or more races:": "Two_Plus",
-            "Two races including Some other race": "Two_Incl_Other",
-            "Two races excluding Some other race, and three or more races": "Two_Excl_Other_Three_Plus"
+            "Some Other Race alone": "Other_Alone",
+            "Two or More Races:": "Two_Plus",
+            "Two races including Some Other Race": "Two_Incl_Other",
+            "Two races excluding Some Other Race, and three or more races": "Two_Excl_Other_Three_Plus"
         })
 
         # convert all columns from strings to numbers
@@ -148,8 +145,8 @@ def cleanRaceData(censusData):
         # create multiracial column from all two or more columns
         censusData["Total_Multiracial"] = censusData["Two_Plus"] + censusData["Two_Incl_Other"] + censusData["Two_Excl_Other_Three_Plus"]
 
-        print(list(censusData.columns))
-        print(censusData.iloc[:5, 3:])
+        # print(list(censusData.columns))
+        # print(censusData.iloc[:5, 3:])
 
         # export refined data to new .csv
         # censusData.to_csv("cleanRaceData.csv")
